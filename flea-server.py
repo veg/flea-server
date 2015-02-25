@@ -121,8 +121,10 @@ def serve_session_with_subpath(session, subpath):
 
 if __name__ == "__main__":
     opts = docopt(__doc__)
-    if '--data' in opts:
+    if opts['--data'] is not None:
         DATA_DIR = path.abspath(opts['--data'])
+    if not path.exists(DATA_DIR):
+        raise Exception('data direction "{}" does not exist'.format(DATA_DIR))
     host = opts['--host']
     port = int(opts['--port'])
     debug = opts['--debug']
