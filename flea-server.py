@@ -105,7 +105,9 @@ def serve_session(session):
         return "{} not found".format(session)
     result = path.join(FRONTEND_DIR, 'index.html')
     with open(result) as handle:
-        return template(handle.read())
+        html = handle.read()
+    html = html.replace('SESSION_ID', session)
+    return template(html)
 
 
 @route('/<session>/<subpath:path>')
