@@ -1,5 +1,6 @@
-"""
+#!/usr/bin/env python
 
+"""
 Usage:
   flea-server.py [options]
   flea-server.py -h | --help
@@ -11,7 +12,6 @@ Options:
   -p --port=<INT>  Port to run [default: 8080]
   -d --debug       Debug mode
   -h --help        Show this screen
-
 
 """
 
