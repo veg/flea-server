@@ -22,6 +22,8 @@ import json
 
 from docopt import docopt
 
+import pandas
+
 from bottle import route, run, template, get
 from bottle import static_file
 from bottle import response
@@ -38,7 +40,7 @@ NAME_MAPPER = {
     'trees': 'trees.json',
     'neutralization': 'mab.json',
     'sequences': 'sequences.json',
-    'rates_pheno': 'rates_pheno.json',
+    'rates_pheno': 'rates_pheno.tsv',
     'dates': 'dates.json',
     'rates': 'rates.json',
 }
@@ -95,6 +97,10 @@ def data_file(session_id, resource):
         contents = handle.read()
     if filename[-len('json'):] == 'json':
         response.content_type = 'application/json'
+    if filename[-len('tsv'):] == 'tsv':
+        response.content_type = 'application/json'
+        df = pandas.read_csv(filename, sep='\t')
+        contents = df.to_json(orient='records')
     return contents
 
 
