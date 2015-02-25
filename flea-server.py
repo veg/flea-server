@@ -6,6 +6,7 @@ import json
 from bottle import route, run, template
 from bottle import static_file
 from bottle import response
+from bottle import redirect
 
 
 SERVER_DIR = path.dirname(path.realpath(__file__))
@@ -74,6 +75,11 @@ def data_file(session_id, resource):
 
 
 @route('/session/<session>')
+def redirect_session(session):
+    """Ember requires the rootUrl to end in a slash"""
+    redirect('/session/{}/'.format(session))
+
+
 @route('/session/<session>/')
 def serve_session(session):
     if session not in sessions():
