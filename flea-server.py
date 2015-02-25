@@ -58,7 +58,6 @@ def server_font(filename):
         filename = filename[:idx]
     except:
         pass
-    print(filename)
     return static_file(filename, root=root)
 
 
@@ -74,6 +73,7 @@ def data_file(session_id, resource):
     return contents
 
 
+@route('/session/<session>')
 @route('/session/<session>/')
 def serve_session(session):
     if session not in sessions():
@@ -81,6 +81,17 @@ def serve_session(session):
     result = path.join(FRONTEND_DIR, 'index.html')
     with open(result) as handle:
         return template(handle.read())
+
+
+@route('/session/<session>/<subpath:path>')
+def serve_session_with_subpath(session, subpath):
+    """Serve the app on all subpaths.
+
+    In conjuction with Ember's HistoryLocation, this allows the client
+    to navigate directly to a url in the Ember app.
+
+    """
+    return serve_session(session)
 
 
 run(host='localhost', port=8090, debug=True)
