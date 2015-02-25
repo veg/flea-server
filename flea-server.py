@@ -22,7 +22,7 @@ import json
 
 from docopt import docopt
 
-from bottle import route, run, template
+from bottle import route, run, template, get
 from bottle import static_file
 from bottle import response
 from bottle import redirect
