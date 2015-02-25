@@ -70,6 +70,11 @@ def serve_static(filename):
     return static_file(filename, root=root)
 
 
+@get('/favicon.ico')
+def get_favicon():
+    return serve_static('favicon.ico')
+
+
 @route('/fonts/<filename>')
 def server_font(filename):
     root = os.path.join(FRONTEND_DIR, 'fonts')
