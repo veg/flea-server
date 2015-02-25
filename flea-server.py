@@ -19,10 +19,9 @@ import glob
 import os
 from os import path
 import json
+import csv
 
 from docopt import docopt
-
-import pandas
 
 from bottle import route, run, template, get
 from bottle import static_file
@@ -88,6 +87,16 @@ def server_font(filename):
     return static_file(filename, root=root)
 
 
+def tsv_to_json(contents):
+    contents = contents.split('\n')
+    lines = list(csv.reader(contents, delimiter='\t'))
+    result = {}
+    keys = lines[0]
+    result = [{key: value for key, value in zip(keys, line)}
+              for line in lines[1:]]
+    return json.dumps(result)
+
+
 @route('/api/<session_id>/<resource>')
 def data_file(session_id, resource):
     if session_id not in sessions():
@@ -99,8 +108,7 @@ def data_file(session_id, resource):
         response.content_type = 'application/json'
     if filename[-len('tsv'):] == 'tsv':
         response.content_type = 'application/json'
-        df = pandas.read_csv(filename, sep='\t')
-        contents = df.to_json(orient='records')
+        contents = tsv_to_json(contents)
     return contents
 
 
