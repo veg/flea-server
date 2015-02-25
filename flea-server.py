@@ -1,7 +1,26 @@
+"""
+
+Usage:
+  flea-server.py [options]
+  flea-server.py -h | --help
+
+Options:
+  -v --verbose     Print progress to STDERR
+  --data <STRING>  Data directory
+  --host <STRING>  Host  [default: localhost]
+  -p --port=<INT>  Port to run [default: 8080]
+  -d --debug       Debug mode
+  -h --help        Show this screen
+
+
+"""
+
 import glob
 import os
 from os import path
 import json
+
+from docopt import docopt
 
 from bottle import route, run, template
 from bottle import static_file
@@ -36,7 +55,7 @@ def sessions():
 
 @route('/')
 def index():
-    links = list('<li><a href="/session/{name}/">{name}</a></li>'.format(name=n)
+    links = list('<li><a href="/{name}/">{name}</a></li>'.format(name=n)
                  for n in sessions())
     header = 'FLEA test server. Available data:\n<ul>\n'
     middle = '\n'.join(links)
@@ -74,13 +93,13 @@ def data_file(session_id, resource):
     return contents
 
 
-@route('/session/<session>')
+@route('/<session>')
 def redirect_session(session):
     """Ember requires the rootUrl to end in a slash"""
-    redirect('/session/{}/'.format(session))
+    redirect('/{}/'.format(session))
 
 
-@route('/session/<session>/')
+@route('/<session>/')
 def serve_session(session):
     if session not in sessions():
         return "{} not found".format(session)
@@ -89,7 +108,7 @@ def serve_session(session):
         return template(handle.read())
 
 
-@route('/session/<session>/<subpath:path>')
+@route('/<session>/<subpath:path>')
 def serve_session_with_subpath(session, subpath):
     """Serve the app on all subpaths.
 
@@ -100,4 +119,11 @@ def serve_session_with_subpath(session, subpath):
     return serve_session(session)
 
 
-run(host='localhost', port=8090, debug=True)
+if __name__ == "__main__":
+    opts = docopt(__doc__)
+    if '--data' in opts:
+        DATA_DIR = path.abspath(opts['--data'])
+    host = opts['--host']
+    port = int(opts['--port'])
+    debug = opts['--debug']
+    run(host=host, port=port, debug=debug)
