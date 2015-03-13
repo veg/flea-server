@@ -28,9 +28,10 @@ from bottle import static_file
 from bottle import response
 from bottle import redirect
 
+ROOT = '/flea'
 
 SERVER_DIR = path.dirname(path.realpath(__file__))
-FRONTEND_DIR = path.join(SERVER_DIR, 'flea-ember-app')
+FRONTEND_DIR = path.join(SERVER_DIR, 'bower_components/flea-app/dist')
 DATA_DIR = path.join(SERVER_DIR, 'mock-data')
 
 NAME_MAPPER = {
@@ -54,9 +55,9 @@ def sessions():
     return names
 
 
-@route('/')
+@route('{}/'.format(ROOT))
 def index():
-    links = list('<li><a href="/{name}/">{name}</a></li>'.format(name=n)
+    links = list('<li><a href="{base}/{name}/">{name}</a></li>'.format(base=ROOT, name=n)
                  for n in sessions())
     header = 'FLEA test server. Available data:\n<ul>\n'
     middle = '\n'.join(links)
@@ -65,18 +66,18 @@ def index():
     return template(html)
 
 
-@route('/assets/<filename>')
+@route('{}/assets/<filename>'.format(ROOT))
 def serve_static(filename):
     root = os.path.join(FRONTEND_DIR, 'assets')
     return static_file(filename, root=root)
 
 
-@get('/favicon.ico')
+@get('{}/favicon.ico'.format(ROOT))
 def get_favicon():
     return serve_static('favicon.ico')
 
 
-@route('/fonts/<filename>')
+@route('{}/fonts/<filename>'.format(ROOT))
 def server_font(filename):
     root = os.path.join(FRONTEND_DIR, 'fonts')
     try:
@@ -97,7 +98,7 @@ def tsv_to_json(contents):
     return json.dumps(result)
 
 
-@route('/api/<session_id>/<resource>')
+@route('{}/data/<session_id>/<resource>'.format(ROOT))
 def data_file(session_id, resource):
     if session_id not in sessions():
         return {}
@@ -112,24 +113,17 @@ def data_file(session_id, resource):
     return contents
 
 
-@route('/<session>')
-def redirect_session(session):
-    """Ember requires the rootUrl to end in a slash"""
-    redirect('/{}/'.format(session))
-
-
-@route('/<session>/')
+@route('{}/<session>/'.format(ROOT))
 def serve_session(session):
     if session not in sessions():
         return "{} not found".format(session)
     result = path.join(FRONTEND_DIR, 'index.html')
     with open(result) as handle:
         html = handle.read()
-    html = html.replace('SESSION_ID', session)
     return template(html)
 
 
-@route('/<session>/<subpath:path>')
+@route('{}/<session>/<subpath:path>'.format(ROOT))
 def serve_session_with_subpath(session, subpath):
     """Serve the app on all subpaths.
 
