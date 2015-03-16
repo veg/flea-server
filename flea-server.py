@@ -28,10 +28,10 @@ from bottle import static_file
 from bottle import response
 from bottle import redirect
 
-ROOT = '/flea'
+ROOT = ''
 
 SERVER_DIR = path.dirname(path.realpath(__file__))
-FRONTEND_DIR = path.join(SERVER_DIR, 'bower_components/flea-app/dist')
+FRONTEND_DIR = path.join(SERVER_DIR, 'flea-ember-app')
 DATA_DIR = path.join(SERVER_DIR, 'mock-data')
 
 NAME_MAPPER = {
