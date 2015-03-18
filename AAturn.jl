@@ -63,19 +63,41 @@ jdict=JSON.parse(f,ordered=true);
 dateStrings=filter(x->x!="HXB2",collect(keys(jdict["1"])));
 sortedDates=sort(dateStrings,by=y->DateTime(y,"yyyymmdd"));
 
+keys(jdict)
+
+n_positions = maximum(map(i->int(i), keys(jdict)))
+if n_positions != length(keys(jdict))
+    throw("error")
+end
 
 newDict = Dict()
 for i in keys(jdict)
-	tempDict=Dict();
-	tempDict["HXB2"]=jdict[i]["HXB2"];
-	tempDict["readCount"]=getReadCount(jdict,i);
-	for k in 2:length(sortedDates)
-		tempDict[sortedDates[k]]=round(rSqr(getAAVec(jdict[i][sortedDates[k-1]]),
-                                                    getAAVec(jdict[i][sortedDates[k]]),
-                                                    reg), 4)
-	end
+    tempDict=Dict();
+    tempDict["readCount"]=getReadCount(jdict,i);
+    for k in 2:length(sortedDates)
+	tempDict[sortedDates[k]]=round(rSqr(getAAVec(jdict[i][sortedDates[k-1]]),
+                                            getAAVec(jdict[i][sortedDates[k]]),
+                                            reg), 4)
+    end
     newDict[string(i)]=tempDict
 end
 
+finalDict = Dict()
+for k in 2:length(sortedDates)
+    date = sortedDates[k]
+    newarr = Array(Float32, n_positions)
+    for i in keys(jdict)
+        newarr[int(i)] = newDict[string(i)][date]
+     end
+    finalDict[date] = newarr
+end
+
+counts = Array(Float32, n_positions)
+for i in keys(jdict)
+    counts[int(i)] = newDict[string(i)]["readCount"]
+end
+finalDict["readCount"] = counts
+
+
 fout=open(fileout,"w");
-JSON.print(fout,newDict)
+JSON.print(fout, finalDict)
