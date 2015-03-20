@@ -43,6 +43,7 @@ NAME_MAPPER = {
     'rates_pheno': 'rates_pheno.tsv',
     'dates': 'dates.json',
     'rates': 'rates.json',
+    'turnover': 'turnover.json',
 }
 
 def parent(f):
