@@ -6,12 +6,13 @@ Usage:
   flea-server.py -h | --help
 
 Options:
-  -v --verbose     Print progress to STDERR
-  --data <STRING>  Data directory
-  --host <STRING>  Host  [default: localhost]
-  -p --port=<INT>  Port to run [default: 8080]
-  -d --debug       Debug mode
-  -h --help        Show this screen
+  -v --verbose      Print progress to STDERR
+  --data <STRING>   Data directory
+  --app <STRING>    flea-app frontent directory
+  --host <STRING>   Host  [default: localhost]
+  -p --port=<INT>   Port to run [default: 8080]
+  -d --debug        Debug mode
+  -h --help         Show this screen
 
 """
 
@@ -140,7 +141,11 @@ if __name__ == "__main__":
     if opts['--data'] is not None:
         DATA_DIR = path.abspath(opts['--data'])
     if not path.exists(DATA_DIR):
-        raise Exception('data direction "{}" does not exist'.format(DATA_DIR))
+        raise Exception('data directory "{}" does not exist'.format(DATA_DIR))
+    if opts['--app'] is not None:
+        FRONTEND_DIR = path.abspath(opts['--app'])
+    if not path.exists(FRONTEND_DIR):
+        raise Exception('app directory"{}" does not exist'.format(FRONTEND_DIR))
     host = opts['--host']
     port = int(opts['--port'])
     debug = opts['--debug']
