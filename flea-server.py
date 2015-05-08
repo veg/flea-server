@@ -37,12 +37,12 @@ DATA_DIR = path.join(SERVER_DIR, 'mock-data')
 
 NAME_MAPPER = {
     'frequencies': 'frequencies.json',
-    'structure': 'secondaryStruct.pdb',
     'trees': 'trees.json',
     'neutralization': 'mab.json',
     'sequences': 'sequences.json',
     'rates_pheno': 'rates_pheno.tsv',
     'dates': 'dates.json',
+    'copynumbers': 'copynumbers.json',
     'rates': 'rates.json',
     'turnover': 'turnover.json',
 }
