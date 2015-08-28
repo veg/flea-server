@@ -36,6 +36,7 @@ FRONTEND_DIR = path.join(SERVER_DIR, 'flea-ember-app')
 DATA_DIR = path.join(SERVER_DIR, 'mock-data')
 
 NAME_MAPPER = {
+    'runinfo': 'run_info.json',
     'coordinates': 'coordinates.json',
     'trees': 'trees.json',
     'neutralization': 'mab.json',
