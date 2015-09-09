@@ -45,7 +45,7 @@ NAME_MAPPER = {
     'dates': 'dates.json',
     'copynumbers': 'copynumbers.json',
     'rates': 'rates.json',
-    'turnover': 'turnover.json',
+    'divergence': 'js_divergence.json',
 }
 
 def parent(f):
