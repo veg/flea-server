@@ -60,7 +60,7 @@ def sessions():
 
 @route('{}/'.format(ROOT))
 def index():
-    links = list('<li><a href="{base}/{name}/">{name}</a></li>'.format(base=ROOT, name=n)
+    links = list('<li><a href="{name}/">{name}</a></li>'.format(base=ROOT, name=n)
                  for n in sessions())
     header = 'FLEA test server. Available data:\n<ul>\n'
     middle = '\n'.join(links)
