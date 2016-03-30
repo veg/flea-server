@@ -69,6 +69,14 @@ def index():
     return template(html)
 
 
+@route('{}/pdbs/<pdbname>'.format(ROOT))
+def serve_pdb(pdbname):
+    fn = os.path.join(FRONTEND_DIR, 'assets/pdbs/{}.pdb'.format(pdbname))
+    with open(fn) as h:
+        lines = h.read().split('\n')
+    return {'data': lines}
+
+
 @route('{}/assets/<filename>'.format(ROOT))
 def serve_static(filename):
     root = os.path.join(FRONTEND_DIR, 'assets')
