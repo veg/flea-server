@@ -41,7 +41,7 @@ NAME_MAPPER = {
     'trees': 'trees.json',
     'neutralization': 'mab.json',
     'sequences': 'sequences.json',
-    'rates_pheno': 'rates_pheno.tsv',
+    'rates_pheno': 'rates_pheno.json',
     'dates': 'dates.json',
     'copynumbers': 'copynumbers.json',
     'rates': 'rates.json',
@@ -99,16 +99,6 @@ def server_font(filename):
     return static_file(filename, root=root)
 
 
-def tsv_to_json(contents):
-    contents = contents.split('\n')
-    lines = list(csv.reader(contents, delimiter='\t'))
-    result = {}
-    keys = lines[0]
-    result = [{key: value for key, value in zip(keys, line)}
-              for line in lines[1:]]
-    return json.dumps(result)
-
-
 @route('{}/data/<session_id>/<resource>'.format(ROOT))
 def data_file(session_id, resource):
     if session_id not in sessions():
@@ -118,9 +108,6 @@ def data_file(session_id, resource):
         contents = handle.read()
     if filename[-len('json'):] == 'json':
         response.content_type = 'application/json'
-    if filename[-len('tsv'):] == 'tsv':
-        response.content_type = 'application/json'
-        contents = tsv_to_json(contents)
     return contents
 
 
