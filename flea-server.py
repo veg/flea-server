@@ -29,7 +29,7 @@ from bottle import static_file
 from bottle import response
 from bottle import redirect
 
-ROOT = ''
+ROOT = '/'
 
 SERVER_DIR = path.dirname(path.realpath(__file__))
 FRONTEND_DIR = path.join(SERVER_DIR, 'flea-ember-app')
@@ -58,9 +58,9 @@ def sessions():
     return names
 
 
-@route('{}/'.format(ROOT))
+@route('{}'.format(ROOT))
 def index():
-    links = list('<li><a href="{name}/">{name}</a></li>'.format(base=ROOT, name=n)
+    links = list('<li><a href="{root}{name}/">{name}</a></li>'.format(root=ROOT, name=n)
                  for n in sessions())
     header = 'FLEA test server. Available data:\n<ul>\n'
     middle = '\n'.join(links)
@@ -69,7 +69,7 @@ def index():
     return template(html)
 
 
-@route('{}/pdbs/<pdbname>'.format(ROOT))
+@route('{}pdbs/<pdbname>'.format(ROOT))
 def serve_pdb(pdbname):
     fn = os.path.join(FRONTEND_DIR, 'assets/pdbs/{}.pdb'.format(pdbname))
     with open(fn) as h:
@@ -77,18 +77,18 @@ def serve_pdb(pdbname):
     return {'data': lines}
 
 
-@route('{}/assets/<filename>'.format(ROOT))
+@route('{}assets/<filename>'.format(ROOT))
 def serve_static(filename):
     root = os.path.join(FRONTEND_DIR, 'assets')
     return static_file(filename, root=root)
 
 
-@get('{}/favicon.ico'.format(ROOT))
+@get('{}favicon.ico'.format(ROOT))
 def get_favicon():
     return serve_static('favicon.ico')
 
 
-@route('{}/fonts/<filename>'.format(ROOT))
+@route('{}fonts/<filename>'.format(ROOT))
 def server_font(filename):
     root = os.path.join(FRONTEND_DIR, 'fonts')
     try:
@@ -99,7 +99,7 @@ def server_font(filename):
     return static_file(filename, root=root)
 
 
-@route('{}/data/<session_id>/<resource>'.format(ROOT))
+@route('{}data/<session_id>/<resource>'.format(ROOT))
 def data_file(session_id, resource):
     if session_id not in sessions():
         return {}
@@ -111,7 +111,7 @@ def data_file(session_id, resource):
     return contents
 
 
-@route('{}/<session>/'.format(ROOT))
+@route('{}<session>/'.format(ROOT))
 def serve_session(session):
     if session not in sessions():
         return "{} not found".format(session)
@@ -121,7 +121,7 @@ def serve_session(session):
     return template(html)
 
 
-@route('{}/<session>/<subpath:path>'.format(ROOT))
+@route('{}<session>/<subpath:path>'.format(ROOT))
 def serve_session_with_subpath(session, subpath):
     """Serve the app on all subpaths.
 
