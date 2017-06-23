@@ -39,6 +39,7 @@ NAME_MAPPER = {
     'runinfo': 'run_info.json',
     'coordinates': 'coordinates.json',
     'trees': 'trees.json',
+    'manifold': 'manifold.json',
     'neutralization': 'mab.json',
     'sequences': 'sequences.json',
     'rates_pheno': 'rates_pheno.json',
