@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+  <ul class=result_list>
+  {% for session in sessions %}
+    <li><a href="{{ url_for('serve_ember_session', session_id=session, path='') }}">{{ session }}</a>
+  {% else %}
+    <li><em>No results so far</em>
+  {% endfor %}
+  </ul>
+{% endblock %}
