@@ -41,7 +41,7 @@ def find_sessions():
 
 @app.route('/api/pdbs/<pdbname>/')
 def serve_pdb(pdbname):
-    fn = 'static/frontend/assets/pdbs/{}.pdb'.format(pdbname)
+    fn = 'static/flea/dist/assets/pdbs/{}.pdb'.format(pdbname)
     print(fn)
     with open(fn) as h:
         lines = h.read().split('\n')
@@ -59,7 +59,7 @@ def session_api(session_id, resource, methods=['GET']):
 
 @app.route('/assets/<filename>/')
 def serve_assets(filename):
-    return send_from_directory('static/frontend/assets', filename)
+    return send_from_directory('static/flea/dist/assets', filename)
 
 
 @app.route('/fonts/<filename>/')
@@ -69,7 +69,7 @@ def serve_font(filename):
         filename = filename[:idx]
     except:
         pass
-    return send_from_directory('static/frontend/fonts', filename)
+    return send_from_directory('static/flea/dist/fonts', filename)
 
 
 @app.route('/results/<session_id>/', defaults={'path': ''})
@@ -81,9 +81,7 @@ def serve_ember_session(session_id, path):
     to navigate directly to a url in the Ember app.
 
     """
-    return send_from_directory('static/frontend', 'index.html')
-# return render_template('index.html', sessions=sessions)
-
+    return send_from_directory('static/flea/dist', 'index.html')
 
 @app.route('/')
 def index():

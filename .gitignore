@@ -1,1 +1,5 @@
 flea_server/static/flea
+run
+results
+*.pyc
+__pycache__
