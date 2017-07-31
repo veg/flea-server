@@ -83,7 +83,13 @@ def serve_ember_session(session_id, path):
     """
     return send_from_directory('static/flea/dist', 'index.html')
 
-@app.route('/')
-def index():
+
+@app.route('/results/')
+def server_results_list():
     sessions = find_sessions()
     return render_template('show_sessions.html', sessions=sessions)
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
