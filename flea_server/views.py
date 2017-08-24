@@ -11,7 +11,7 @@ from flask import jsonify
 from flask import json
 from flask import abort
 
-from flea_server import app, config
+from flea_server import app, config, SITE_ROOT
 
 
 NAME_MAPPER = {
@@ -41,7 +41,7 @@ def find_sessions():
 
 @app.route('/api/pdbs/<pdbname>/')
 def serve_pdb(pdbname):
-    fn = 'static/flea/dist/assets/pdbs/{}.pdb'.format(pdbname)
+    fn = os.path.join(SITE_ROOT, 'static', 'flea', 'dist', 'assets', 'pdbs', '{}.pdb'.format(pdbname))
     print(fn)
     with open(fn) as h:
         lines = h.read().split('\n')
