@@ -57,19 +57,14 @@ def session_api(session_id, resource, methods=['GET']):
     return send_from_directory(directory, filename)
 
 
+@app.route('/assets/fonts/<filename>/')
+def serve_font(filename):
+    return send_from_directory('static/flea/dist/assets/fonts', filename)
+
+
 @app.route('/assets/<filename>/')
 def serve_assets(filename):
     return send_from_directory('static/flea/dist/assets', filename)
-
-
-@app.route('/fonts/<filename>/')
-def serve_font(filename):
-    try:
-        idx = filename.index('?')
-        filename = filename[:idx]
-    except:
-        pass
-    return send_from_directory('static/flea/dist/fonts', filename)
 
 
 @app.route('/results/<session_id>/', defaults={'path': ''})
