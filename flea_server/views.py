@@ -26,6 +26,7 @@ NAME_MAPPER = {
     'copynumbers': 'copynumbers.json',
     'rates': 'rates.json',
     'divergence': 'js_divergence.json',
+    'predefined_regions': 'predefined_regions.json',
 }
 
 
@@ -52,6 +53,11 @@ def serve_pdb(pdbname):
 def session_api(session_id, resource, methods=['GET']):
     if session_id not in find_sessions():
         abort(404)
+    if resource == 'predefined_regions':
+        regions_file = NAME_MAPPER[resource]
+        fn = os.path.join(SITE_ROOT, 'static', 'flea', 'dist', 'assets', regions_file)
+        if os.path.exists(fn):
+            return send_from_directory('static/flea/dist/assets', regions_file)
     directory = os.path.join(config.DATA_DIR, session_id)
     filename = NAME_MAPPER[resource]
     return send_from_directory(directory, filename)
