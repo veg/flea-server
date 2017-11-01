@@ -14,22 +14,6 @@ from flask import abort
 from flea_server import app, config, SITE_ROOT
 
 
-NAME_MAPPER = {
-    'runinfo': 'run_info.json',
-    'coordinates': 'coordinates.json',
-    'trees': 'trees.json',
-    'manifold': 'manifold.json',
-    'neutralization': 'mab.json',
-    'sequences': 'sequences.json',
-    'rates_pheno': 'rates_pheno.json',
-    'dates': 'dates.json',
-    'copynumbers': 'copynumbers.json',
-    'rates': 'rates.json',
-    'divergence': 'js_divergence.json',
-    'predefined_regions': 'predefined_regions.json',
-}
-
-
 def parent(f):
     return os.path.split(os.path.dirname(f))[1]
 
@@ -40,27 +24,33 @@ def find_sessions():
     return names
 
 
-@app.route('/api/pdbs/<pdbname>/')
-def serve_pdb(pdbname):
-    fn = os.path.join(SITE_ROOT, 'static', 'flea', 'dist', 'assets', 'pdbs', '{}.pdb'.format(pdbname))
-    print(fn)
-    with open(fn) as h:
-        lines = h.read().split('\n')
-    return jsonify({'data': lines})
-
-
-@app.route('/api/sessions/<session_id>/<resource>/')
-def session_api(session_id, resource, methods=['GET']):
+@app.route('/api/sessions/<session_id>/')
+def session_api(session_id, methods=['GET']):
     if session_id not in find_sessions():
         abort(404)
-    if resource == 'predefined_regions':
-        regions_file = NAME_MAPPER[resource]
-        fn = os.path.join(SITE_ROOT, 'static', 'flea', 'dist', 'assets', regions_file)
-        if os.path.exists(fn):
-            return send_from_directory('static/flea/dist/assets', regions_file)
     directory = os.path.join(config.DATA_DIR, session_id)
-    filename = NAME_MAPPER[resource]
-    return send_from_directory(directory, filename)
+    with open(os.path.join(directory, 'session.json')) as handle:
+        result = json.load(handle)
+
+    result['session_id'] = session_id
+
+    # insert predefined regions
+    regions_file = os.path.join(directory, 'predefined_regions.json')
+    if not os.path.exists(regions_file):
+        regions_file = os.path.join(SITE_ROOT, 'static', 'flea', 'dist', 'assets', regions_file)
+    with open(regions_file) as handle:
+        regions_json = json.load(handle)
+    result['predefined_regions'] = regions_json['regions']
+
+    # insert structure
+    pdb_file = os.path.join(directory, 'structure.pdb')
+    if not os.path.exists(pdb_file):
+        pdb_file = os.path.join(SITE_ROOT, 'static', 'flea', 'dist', 'assets', 'pdbs', 'env_structure.pdb')
+    with open(pdb_file) as h:
+        lines = h.read().split('\n')
+    result['pdb'] = lines
+
+    return jsonify(result)
 
 
 @app.route('/assets/fonts/<filename>/')
