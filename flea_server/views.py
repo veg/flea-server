@@ -24,6 +24,14 @@ def find_sessions():
     return names
 
 
+@app.route('/api/zips/<session_id>.zip')
+def zip_api(session_id, methods=['GET']):
+    directory = os.path.join(config.DATA_DIR, session_id)
+    return send_from_directory(directory, 'session.zip',
+                               as_attachment=True,
+                               attachment_filename="{}.zip".format(session_id))
+
+
 @app.route('/api/sessions/<session_id>/')
 def session_api(session_id, methods=['GET']):
     if session_id not in find_sessions():
