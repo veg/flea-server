@@ -1,4 +1,4 @@
-flea_server/static/flea
+flea_server/static/web-app
 run
 results
 *.pyc

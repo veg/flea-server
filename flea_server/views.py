@@ -10,6 +10,7 @@ from flask import send_from_directory
 from flask import jsonify
 from flask import json
 from flask import abort
+from flask import redirect
 
 from flea_server import app, config, SITE_ROOT
 
@@ -71,8 +72,8 @@ def serve_assets(filename):
     return send_from_directory('static/web-app/assets', filename)
 
 
-@app.route('/<session_id>/', defaults={'path': ''})
-@app.route('/<session_id>/<path:path>/')
+@app.route('/view/<session_id>/', defaults={'path': ''})
+@app.route('/view/<session_id>/<path:path>/')
 def serve_ember_session(session_id, path):
     """Serve the app on all subpaths.
 
@@ -81,6 +82,11 @@ def serve_ember_session(session_id, path):
 
     """
     return send_from_directory('static/web-app/', 'index.html')
+
+
+@app.route('/view/')
+def redirect_view():
+    return redirect("/", code=302)
 
 
 @app.route('/')
