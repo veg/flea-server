@@ -45,7 +45,7 @@ def session_api(session_id, methods=['GET']):
     # insert predefined regions
     regions_file = os.path.join(directory, 'predefined_regions.json')
     if not os.path.exists(regions_file):
-        regions_file = os.path.join(SITE_ROOT, 'static', 'flea', 'dist', 'assets', regions_file)
+        regions_file = os.path.join(SITE_ROOT, 'static', 'web-app', 'assets', regions_file)
     with open(regions_file) as handle:
         regions_json = json.load(handle)
     result['predefined_regions'] = regions_json['regions']
@@ -53,7 +53,7 @@ def session_api(session_id, methods=['GET']):
     # insert structure
     pdb_file = os.path.join(directory, 'structure.pdb')
     if not os.path.exists(pdb_file):
-        pdb_file = os.path.join(SITE_ROOT, 'static', 'flea', 'dist', 'assets', 'pdbs', 'env_structure.pdb')
+        pdb_file = os.path.join(SITE_ROOT, 'static', 'web-app', 'assets', 'pdbs', 'env_structure.pdb')
     with open(pdb_file) as h:
         lines = h.read().split('\n')
     result['pdb'] = lines
@@ -63,16 +63,16 @@ def session_api(session_id, methods=['GET']):
 
 @app.route('/assets/fonts/<filename>/')
 def serve_font(filename):
-    return send_from_directory('static/flea/dist/assets/fonts', filename)
+    return send_from_directory('static/web-app/assets/fonts', filename)
 
 
 @app.route('/assets/<filename>/')
 def serve_assets(filename):
-    return send_from_directory('static/flea/dist/assets', filename)
+    return send_from_directory('static/web-app/assets', filename)
 
 
-@app.route('/results/<session_id>/', defaults={'path': ''})
-@app.route('/results/<session_id>/<path:path>/')
+@app.route('/<session_id>/', defaults={'path': ''})
+@app.route('/<session_id>/<path:path>/')
 def serve_ember_session(session_id, path):
     """Serve the app on all subpaths.
 
@@ -80,12 +80,7 @@ def serve_ember_session(session_id, path):
     to navigate directly to a url in the Ember app.
 
     """
-    return send_from_directory('static/flea/dist', 'index.html')
-
-
-@app.route('/results/')
-def server_results_list():
-    return render_template('show_sessions.html')
+    return send_from_directory('static/web-app/', 'index.html')
 
 
 @app.route('/')
