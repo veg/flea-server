@@ -85,8 +85,7 @@ def serve_ember_session(session_id, path):
 
 @app.route('/results/')
 def server_results_list():
-    sessions = find_sessions()
-    return render_template('show_sessions.html', sessions=sessions)
+    return render_template('show_sessions.html')
 
 
 @app.route('/')
