@@ -20,7 +20,7 @@ def parent(f):
 
 
 def find_sessions():
-    files = glob.glob(os.path.join(config.DATA_DIR, '*/sequences.json'))
+    files = glob.glob(os.path.join(config.DATA_DIR, '*/session.json'))
     names = list(parent(f) for f in files)
     return names
 
@@ -46,7 +46,7 @@ def session_api(session_id, methods=['GET']):
     # insert predefined regions
     regions_file = os.path.join(directory, 'predefined_regions.json')
     if not os.path.exists(regions_file):
-        regions_file = os.path.join(SITE_ROOT, 'static', 'web-app', 'assets', regions_file)
+        regions_file = os.path.join(SITE_ROOT, 'static', 'web-app', 'assets', 'predefined_regions.json')
     with open(regions_file) as handle:
         regions_json = json.load(handle)
     result['predefined_regions'] = regions_json['regions']
